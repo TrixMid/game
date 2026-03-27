@@ -28,6 +28,7 @@
         <th>ID</th>
         <th>Fragetext</th>
         <th>Fragensatz</th>
+        <th>Team</th>
         <th>Typ</th>
         <th>Punkte</th>
         <th>Themen</th>
@@ -39,6 +40,7 @@
         <td th:text="${q.id}"></td>
         <td th:text="${q.startText}"></td>
         <td th:text="${q.questionSet.title}"></td>
+        <td th:text="${q.questionSet.team.name}"></td>
         <td th:text="${q.questionType}"></td>
         <td th:text="${q.points}"></td>
         <td>

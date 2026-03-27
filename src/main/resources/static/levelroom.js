@@ -436,8 +436,8 @@ function updateBoardWithGapAnswers() {
     if (oldBoard) oldBoard.destroy();
 
     const newText = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
-        190,
+        ROOM_WIDTH / 2,
+        205,
         fullText,
         {
             fontFamily: "Arial Black, Arial, sans-serif",
@@ -494,12 +494,12 @@ function drawQuestionRoom() {
 
     /* Fenster */
     const windowY = 160;
-    [180, 340, 1660].forEach(x => {
+    [180, 340, ROOM_WIDTH - 840].forEach(x => {
         scene.add.image(x, windowY, "window").setDepth(-10).setScale(uiScale);
     });
 
-    /* Tafel weiter nach links */
-    scene.add.image(ROOM_WIDTH / 2 - 120, 190, "board").setDepth(-9).setScale(uiScale);
+    /* Tafel */
+    scene.add.image(ROOM_WIDTH / 2, 190, "board").setDepth(-9).setScale(uiScale);
 
     /* Uhr */
     const clockX = 1510;
@@ -510,7 +510,7 @@ function drawQuestionRoom() {
     scene.add.line(0, 0, clockX, clockY, clockX + 12, clockY, 0x444444).setLineWidth(2).setDepth(-6);
 
     /* Lehrertisch */
-    scene.add.image(ROOM_WIDTH / 2 - 120, 365, "teacherDesk").setDepth(1).setScale(uiScale);
+    scene.add.image(ROOM_WIDTH / 2, 365, "teacherDesk").setDepth(1).setScale(uiScale);
 
     scene.add.text(20, 56, `Level ${level} - Frage ${currentQuestionIndex + 1}${questions.length ? " / " + questions.length : ""}`, {
         fontFamily: "Arial, sans-serif",
@@ -530,7 +530,7 @@ function createBoardQuestion(question) {
     }
 
     const boardText = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
+        ROOM_WIDTH / 2,
         205,
         text,
         {
@@ -590,7 +590,7 @@ function createAnswerTables(answers) {
 }
 
 function handleTableSelection() {
-    if (!player) return;
+    if (!player || !currentQuestionDetail) return;
 
     tables.forEach(table => {
         const dx = Math.abs(player.x - table.x);
@@ -600,6 +600,17 @@ function handleTableSelection() {
 
         if (isNearTable && !table.playerInside) {
             table.playerInside = true;
+
+            const allowsMultiple = currentQuestionDetail.allowsMultiple === true || currentQuestionDetail.allowsMultiple === 1;
+
+            if (!allowsMultiple && !table.isSelected) {
+                // Deselect all others if not already selected
+                tables.forEach(t => {
+                    t.isSelected = false;
+                    t.setTexture("answerDesk");
+                });
+            }
+
             table.isSelected = !table.isSelected;
 
             if (table.isSelected) {
@@ -644,11 +655,30 @@ function fitTextToBox(textObject, maxWidth, maxHeight, startSize, minSize) {
     textObject.setFontSize(size);
     textObject.setWordWrapWidth(maxWidth);
 
-    while ((textObject.width > maxWidth || textObject.height > maxHeight) && size > minSize) {
-        size -= 1;
-        textObject.setFontSize(size);
-        textObject.setWordWrapWidth(maxWidth);
+    // Initial check
+    if (textObject.width <= maxWidth && textObject.height <= maxHeight) {
+        return;
     }
+
+    // Binary search for optimal font size
+    let low = minSize;
+    let high = startSize;
+    let bestSize = minSize;
+
+    while (low <= high) {
+        let mid = Math.floor((low + high) / 2);
+        textObject.setFontSize(mid);
+        textObject.setWordWrapWidth(maxWidth);
+
+        if (textObject.width <= maxWidth && textObject.height <= maxHeight) {
+            bestSize = mid;
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    textObject.setFontSize(bestSize);
+    textObject.setWordWrapWidth(maxWidth);
 }
 
 function showBoardMessage(message) {
@@ -657,7 +687,7 @@ function showBoardMessage(message) {
     createPlayer.call(sceneRef);
 
     const msg = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
+        ROOM_WIDTH / 2,
         205,
         message,
         {
@@ -879,11 +909,13 @@ function createTextures() {
     g.clear();
 
     /* Antworttisch ausgewählt */
-    g.fillStyle(0x3fae4a, 1);
+    g.fillStyle(0x18bc9c, 1);
     g.fillRoundedRect(0, 0, 520, 110, 8);
-    g.fillStyle(0x2f7d36, 1);
+    g.fillStyle(0x128f76, 1);
     g.fillRect(18, 88, 14, 36);
     g.fillRect(488, 88, 14, 36);
+    g.lineStyle(4, 0xffffff, 1);
+    g.strokeRoundedRect(0, 0, 520, 110, 8);
     g.generateTexture("answerDeskSelected", 520, 124);
     g.clear();
 
@@ -894,6 +926,8 @@ function createTextures() {
     g.fillRoundedRect(60, 20, 400, 60, 8);
     g.fillStyle(0xecf0f1, 1);
     g.fillRect(70, 30, 380, 40);
+    g.lineStyle(2, 0x000000, 1);
+    g.strokeRoundedRect(60, 20, 400, 60, 8);
     g.generateTexture("computerDesk", 520, 124);
     g.clear();
 

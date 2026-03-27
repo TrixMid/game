@@ -383,11 +383,30 @@ function fitTextToBox(textObject, maxWidth, maxHeight, startSize, minSize) {
     textObject.setFontSize(size);
     textObject.setWordWrapWidth(maxWidth);
 
-    while ((textObject.width > maxWidth || textObject.height > maxHeight) && size > minSize) {
-        size -= 1;
-        textObject.setFontSize(size);
-        textObject.setWordWrapWidth(maxWidth);
+    // Initial check
+    if (textObject.width <= maxWidth && textObject.height <= maxHeight) {
+        return;
     }
+
+    // Binary search for optimal font size
+    let low = minSize;
+    let high = startSize;
+    let bestSize = minSize;
+
+    while (low <= high) {
+        let mid = Math.floor((low + high) / 2);
+        textObject.setFontSize(mid);
+        textObject.setWordWrapWidth(maxWidth);
+
+        if (textObject.width <= maxWidth && textObject.height <= maxHeight) {
+            bestSize = mid;
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    textObject.setFontSize(bestSize);
+    textObject.setWordWrapWidth(maxWidth);
 }
 
 function createPlayer() {
@@ -468,11 +487,13 @@ function createTextures() {
     g.generateTexture("answerDesk", 520, 124);
     g.clear();
 
-    g.fillStyle(0x3fae4a, 1);
+    g.fillStyle(0x18bc9c, 1);
     g.fillRoundedRect(0, 0, 520, 110, 8);
-    g.fillStyle(0x2f7d36, 1);
+    g.fillStyle(0x128f76, 1);
     g.fillRect(18, 88, 14, 36);
     g.fillRect(488, 88, 14, 36);
+    g.lineStyle(4, 0xffffff, 1);
+    g.strokeRoundedRect(0, 0, 520, 110, 8);
     g.generateTexture("answerDeskSelected", 520, 124);
     g.clear();
 
