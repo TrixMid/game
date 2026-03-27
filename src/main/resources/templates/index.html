@@ -8,10 +8,38 @@
         #menu {
             display: none;
         }
+        .admin-welcome {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-top: 50px;
+        }
+        .admin-welcome p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .shortcut-hint {
+            display: inline-block;
+            background: #eee;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 <h1>Quizspiel-Admin</h1>
+
+<div class="admin-welcome">
+    <h2>Willkommen im Administrationsbereich!</h2>
+    <p>Hier können Sie alle Aspekte des Quizspiels verwalten.</p>
+    <p>Drücken Sie <span class="shortcut-hint">Ctrl + P</span>, um das Navigationsmenü anzuzeigen oder auszublenden.</p>
+</div>
+
 <div id="menu">
     <ul>
         <li><a href="/themes">Themen verwalten</a></li>
