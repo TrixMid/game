@@ -27,7 +27,7 @@
     <tr>
         <th>ID</th>
         <th>Titel</th>
-        <th>Teamname</th>
+        <th>Team Name</th>
     </tr>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@
         <input type="text" id="title" th:field="*{title}">
     </div>
     <div>
-        <label for="team">Teamname:</label>
+        <label for="team">Team Name:</label>
         <select id="team" th:field="*{team}">
             <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
         </select>
