@@ -44,24 +44,28 @@ h1, h2 {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin-top: 20px;
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border-radius: 12px;
     overflow: hidden;
 }
 
 th, td {
     text-align: left;
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+    padding: 15px 20px;
+    border-bottom: 1px solid #edf2f7;
 }
 
 th {
     background-color: #34495e;
     color: white;
     font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
 }
 
 tr:hover {
@@ -70,9 +74,9 @@ tr:hover {
 
 form {
     background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     margin-top: 30px;
 }
 
@@ -106,13 +110,20 @@ button {
     color: white;
     padding: 12px 24px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(24, 188, 156, 0.2);
 }
 
 button:hover {
     background-color: #128f76;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(24, 188, 156, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
 }
