@@ -41,11 +41,7 @@
         <td th:text="${q.questionSet.title}"></td>
         <td th:text="${q.questionType}"></td>
         <td th:text="${q.points}"></td>
-        <td>
-            <ul>
-                <li th:each="theme : ${q.themes}" th:text="${theme.name}"></li>
-            </ul>
-        </td>
+        <td th:text="${#strings.arrayJoin(q.themes.![name], ', ')}"></td>
         <td>
             <a th:if="${q.questionType.name() == 'MC' or q.questionType.name() == 'TF'}" th:href="@{/questions/{id}/mcanswers(id=${q.id})}">Antworten verwalten</a>
             <a th:if="${q.questionType.name() == 'GAP'}" th:href="@{/questions/{id}/gapfields(id=${q.id})}">Lücken verwalten</a>
