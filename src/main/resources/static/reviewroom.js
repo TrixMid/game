@@ -3,7 +3,7 @@ const sessionId = params.get("sessionId");
 const level = params.get("level") || "1";
 
 const ROOM_WIDTH = 2000;
-const ROOM_HEIGHT = window.innerHeight + 120;
+const ROOM_HEIGHT = Math.max(1500, window.innerHeight + 500);
 const PLAYER_SPEED = 300;
 
 let summaryShown = false;
@@ -166,7 +166,7 @@ function showSummaryScreen(summary) {
 
     summaryShown = true;
 
-    const title = sceneRef.add.text(ROOM_WIDTH / 2, 160, "ABSCHLUSS", {
+    const title = sceneRef.add.text(ROOM_WIDTH / 2, 108, "ABSCHLUSS", {
         fontFamily: "Arial Black, Arial, sans-serif",
         fontSize: "38px",
         color: "#f5f5f5",
@@ -174,13 +174,19 @@ function showSummaryScreen(summary) {
         strokeThickness: 6
     }).setOrigin(0.5).setDepth(20);
 
-    const text =
-        "Team: " + (summary.playerName || "-") + "\n\n" +
-        "Punkte: " + (summary.totalPoints ?? 0) + " / " + (summary.maxPoints ?? 0) + "\n\n" +
-        "Score: " + (summary.scoreOutOf100 ?? 0) + " / 100\n\n" +
-        "Medaille: " + (summary.medal || "NONE");
+    const localizedMedal = (summary.medal || "NONE").toUpperCase();
+    let medalDisplay = "KEINE";
+    if (localizedMedal === "GOLD") medalDisplay = "GOLD";
+    else if (localizedMedal === "SILVER" || localizedMedal === "SILBER") medalDisplay = "SILBER";
+    else if (localizedMedal === "BRONZE") medalDisplay = "BRONZE";
 
-    const summaryText = sceneRef.add.text(ROOM_WIDTH / 2, 330, text, {
+    const text =
+        "Team: " + (summary.playerName || "-") + "\n" +
+        "Punkte: " + (summary.totalPoints ?? 0) + " / " + (summary.maxPoints ?? 0) + "\n" +
+        "Score: " + (summary.scoreOutOf100 ?? 0) + " / 100\n" +
+        "Medaille: " + medalDisplay;
+
+    const summaryText = sceneRef.add.text(ROOM_WIDTH / 2, 213, text, {
         fontFamily: "Arial Black, Arial, sans-serif",
         fontSize: "30px",
         color: "#ffffff",
@@ -189,6 +195,8 @@ function showSummaryScreen(summary) {
         strokeThickness: 5,
         lineSpacing: 12
     }).setOrigin(0.5).setDepth(20);
+
+    fitTextToBox(summaryText, 760, 170, 30, 16);
 
     createNextDoor();
 
