@@ -42,9 +42,7 @@
         <td th:text="${q.questionType}"></td>
         <td th:text="${q.points}"></td>
         <td>
-            <ul>
-                <li th:each="theme : ${q.themes}" th:text="${theme.name}"></li>
-            </ul>
+            <span class="theme-list" th:text="${#strings.listJoin(q.themes.![name], ', ')}"></span>
         </td>
         <td>
             <a th:if="${q.questionType.name() == 'MC' or q.questionType.name() == 'TF'}" th:href="@{/questions/{id}/mcanswers(id=${q.id})}">Antworten verwalten</a>

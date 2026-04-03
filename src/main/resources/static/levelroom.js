@@ -400,12 +400,12 @@ function saveGapAnswersFromOverlay() {
         const selectedOption = gaps[i].options.find(opt => opt.gapOptionId == selectedVal);
         if (existingIndex >= 0) {
             currentGapAnswers[existingIndex].selectedOptionId = parseInt(selectedVal);
-            currentGapAnswers[existingIndex].userText = selectedOption.optionText;
+            currentGapAnswers[existingIndex].userText = selectedOption ? selectedOption.optionText : "";
         } else {
             currentGapAnswers.push({
                 gapId: gapId,
                 selectedOptionId: parseInt(selectedVal),
-                userText: selectedOption.optionText
+                userText: selectedOption ? selectedOption.optionText : ""
             });
         }
     }
@@ -436,7 +436,7 @@ function updateBoardWithGapAnswers() {
     if (oldBoard) oldBoard.destroy();
 
     const newText = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
+        ROOM_WIDTH / 2,
         190,
         fullText,
         {
@@ -498,8 +498,8 @@ function drawQuestionRoom() {
         scene.add.image(x, windowY, "window").setDepth(-10).setScale(uiScale);
     });
 
-    /* Tafel weiter nach links */
-    scene.add.image(ROOM_WIDTH / 2 - 120, 190, "board").setDepth(-9).setScale(uiScale);
+    /* Tafel zentriert */
+    scene.add.image(ROOM_WIDTH / 2, 190, "board").setDepth(-9).setScale(uiScale);
 
     /* Uhr */
     const clockX = 1510;
@@ -510,7 +510,7 @@ function drawQuestionRoom() {
     scene.add.line(0, 0, clockX, clockY, clockX + 12, clockY, 0x444444).setLineWidth(2).setDepth(-6);
 
     /* Lehrertisch */
-    scene.add.image(ROOM_WIDTH / 2 - 120, 365, "teacherDesk").setDepth(1).setScale(uiScale);
+    scene.add.image(ROOM_WIDTH / 2, 365, "teacherDesk").setDepth(1).setScale(uiScale);
 
     scene.add.text(20, 56, `Level ${level} - Frage ${currentQuestionIndex + 1}${questions.length ? " / " + questions.length : ""}`, {
         fontFamily: "Arial, sans-serif",
@@ -530,7 +530,7 @@ function createBoardQuestion(question) {
     }
 
     const boardText = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
+        ROOM_WIDTH / 2,
         205,
         text,
         {
@@ -657,7 +657,7 @@ function showBoardMessage(message) {
     createPlayer.call(sceneRef);
 
     const msg = sceneRef.add.text(
-        ROOM_WIDTH / 2 - 120,
+        ROOM_WIDTH / 2,
         205,
         message,
         {
